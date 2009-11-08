@@ -4,13 +4,13 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>firebugpaintevents@kylescholz.com</em:id>
     <em:name>Firebug Paint Events</em:name>
-    <em:version>0.1.5</em:version>
+    <em:version>0.1.6</em:version>
     <em:creator>Kyle Scholz</em:creator>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- firefox -->
         <em:minVersion>3.1b1</em:minVersion>
-        <em:maxVersion>3.1b3pre</em:maxVersion>
+        <em:maxVersion>3.6.*</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>
