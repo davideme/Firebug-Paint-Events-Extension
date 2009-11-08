@@ -11,7 +11,7 @@ const PREF_STOREEVENTS = 'paintevents.collect_storeevents';
 
 const DEBUG_MODE = false;
 
-FBL.ns(function() { with (FBL) { 
+FBL.ns(function() { with (FBL) {
 Firebug.Paint = extend(Firebug.Module, { 
   /* Indicates whether screenshots should be captured. */
   collectScreenshots: Firebug.getPref(Firebug.prefDomain, PREF_SCREENSHOTS),
@@ -235,6 +235,20 @@ Firebug.Paint = extend(Firebug.Module, {
 
 function PaintPanel() {} 
 PaintPanel.prototype = domplate(Firebug.Panel, {
+  /** @override */
+  show: function(state) {
+    if (this.showToolbarButtons) {
+      this.showToolbarButtons('fbPaintButtons', true);
+    }
+  },
+
+  /** @override */
+  hide: function() {
+    if (this.showToolbarButtons) {
+      this.showToolbarButtons('fbPaintButtons', false);
+    }
+  },
+
   tableTag:
     TABLE({class: 'netTable', cellpadding: 2, cellspacing: 2, width: '100%'},
       TBODY(

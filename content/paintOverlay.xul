@@ -7,14 +7,15 @@
   <commandset id="mainCommandSet"> 
     <command id="cmd_togglePaint" oncommand="Firebug.Paint.toggle()"/> 
     <command id="cmd_toggleScreenshots" oncommand="Firebug.Paint.toggleScreenshots()"/> 
-    <command id="cmd_clearPaint" oncommand="Firebug.Paint.clear()"/> 
+    <command id="cmd_clearPaint" oncommand="Firebug.Paint.clear()"/>
   </commandset> 
   <toolbar id="fbToolbar" align="center"> 
     <hbox id="fbToolbarInner" insertbefore="fbDetachButton" flex="1" align="center"> 
-      <hbox id="fbPaintButtons" insertafter="fbNetButtons"> 
+      <hbox id="fbPaintButtons" insertafter="fbNetButtons" collapsed="true"> 
+        <toolbarbutton label="Clear" class="toolbar-text-button" tooltiptext="Clear Paint Events" command="cmd_clearPaint"/>
+        <toolbarseparator/>
         <toolbarbutton id="fbPaintToggle" label="Log Events" class="toolbar-text-button" tooltiptext="Toggle Event Logging" command="cmd_togglePaint"/>
         <toolbarbutton id="fbPaintScreenshotsToggle" label="Screenshots" class="toolbar-text-button" tooltiptext="Toggle Screenshots" command="cmd_toggleScreenshots"/>
-        <toolbarbutton label="Clear" class="toolbar-text-button" tooltiptext="Clear Paint Events" command="cmd_clearPaint"/> 
       </hbox> 
     </hbox> 
   </toolbar>
