@@ -1,0 +1,22 @@
+.screenshotStage {
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+}
+
+.innerScreenshotStage {
+  position: relative;
+  z-Index: 100;
+}
+
+.screenshotImage {
+  position: absolute;
+  top: 0;
+  z-Index: 1;
+}
+
+.paintRow {}
+
+.paintRow:hover {
+  background: #ddd;
+}
