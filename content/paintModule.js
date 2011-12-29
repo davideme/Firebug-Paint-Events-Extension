@@ -1,6 +1,7 @@
 /**
  * Copyright: 2009
  * Author: Kyle Scholz      http://kylescholz.com/
+ * Author: Davide Mendolia
  */
 FBL.ns(function() {with (FBL) {
     
@@ -73,8 +74,8 @@ FBL.ns(function() {with (FBL) {
     },
       
     syncPanelButtons: function() {
-      FirebugChrome.$('fbPaintToggle').checked = Firebug.Paint.storeEvents;
-      FirebugChrome.$('fbPaintScreenshotsToggle').checked =
+      Firebug.chrome.$('fbPaintToggle').checked = Firebug.Paint.storeEvents;
+      Firebug.chrome.$('fbPaintScreenshotsToggle').checked =
       Firebug.Paint.collectScreenshots;
     },
     
@@ -84,9 +85,9 @@ FBL.ns(function() {with (FBL) {
     },
     
     clear: function(e) {
-      FirebugContext.events = [];
-      FirebugContext.baseTime = new Date();
-      this.updateEventList(FirebugContext.getPanel('Paint'));
+      Firebug.currentContext.events = [];
+      Firebug.currentContext.baseTime = new Date();
+      this.updateEventList(Firebug.currentContext.getPanel('Paint'));
     },
     
     showSidePanel: function(browser, panel) {
@@ -106,14 +107,14 @@ FBL.ns(function() {with (FBL) {
      * @param {Object} panel
      */
     maybeCreateOverlayStage: function(panel) {
-      var doc = FirebugContext.window.document;
-      var stage = doc.getElementById(DOCUMENT_STAGE_ID + FirebugContext.uid);
+      var doc = Firebug.currentContext.window.document;
+      var stage = doc.getElementById(DOCUMENT_STAGE_ID + Firebug.currentContext.uid);
       if (!stage) {
         stage = doc.createElement('div');
         stage.style.position = 'absolute';
         stage.style.top = '0';
         stage.style.left = '0';
-        stage.id = DOCUMENT_STAGE_ID + FirebugContext.uid;
+        stage.id = DOCUMENT_STAGE_ID + Firebug.currentContext.uid;
         doc.body.appendChild(stage);
       }
     },
@@ -175,19 +176,19 @@ FBL.ns(function() {with (FBL) {
     
       var innerScreenshotStage = doc.createElement('div');
       innerScreenshotStage.className = 'innerScreenshotStage';
-      innerScreenshotStage.id = SCREENSHOT_STAGE_ID + FirebugContext.uid;
+      innerScreenshotStage.id = SCREENSHOT_STAGE_ID + Firebug.currentContext.uid;
       screenshotStage.appendChild(innerScreenshotStage);
     
-      var img = FirebugContext.window.document.createElement('img');
+      var img = Firebug.currentContext.window.document.createElement('img');
       img.className = 'screenshotImage';
-      img.id = IMAGE_ID + FirebugContext.uid;
+      img.id = IMAGE_ID + Firebug.currentContext.uid;
       panel.panelNode.appendChild(img);
     },
     
     showPanel: function(browser, panel) { 
       if (panel && panel.name == 'Paint') {
         applyPaintPanelStyleSheet(panel);
-        Firebug.Paint.syncPanelButtons();
+        Firebug.Paint.syncPanelButtons(browser);
     
         // Don't capture paint events that are triggered by the extension. 
         panel.panelNode.ownerDocument.body.onmouseover = function() {
@@ -196,8 +197,8 @@ FBL.ns(function() {with (FBL) {
     
         panel.panelNode.ownerDocument.body.onmouseout = function() {
           Firebug.Paint.storeEventsInteracting = true;
-          var doc = FirebugContext.window.document;
-          var stage = doc.getElementById(DOCUMENT_STAGE_ID + FirebugContext.uid);
+          var doc = Firebug.currentContext.window.document;
+          var stage = doc.getElementById(DOCUMENT_STAGE_ID + Firebug.currentContext.uid);
           if (stage) stage.innerHTML = '';
         }
         this.updateEventList(panel);
@@ -211,14 +212,14 @@ FBL.ns(function() {with (FBL) {
     updateEventList: function(panel) {
       panel.panelNode.innerHTML = '';
       try {
-      if (FirebugContext.events.length) {
+      if (Firebug.currentContext.events.length) {
           var table = panel.tableTag.replace({}, panel.panelNode, panel);
           var tbody = table.firstChild;
           var lastRow = table.firstChild.firstChild;
     
           var row = panel.eventTag.insertRows(
-            {events: FirebugContext.events}, lastRow)[0];
-          for (var i = 0, event; event = FirebugContext.events[i++];) {
+            {events: Firebug.currentContext.events}, lastRow)[0];
+          for (var i = 0, event; event = Firebug.currentContext.events[i++];) {
             row.repObject = event;
             event.row = row;
             row = row.nextSibling;
@@ -283,21 +284,21 @@ FBL.ns(function() {with (FBL) {
     editable: false,
     
     formatEvent: function(event) {
-      return event.timestamp.getTime() - FirebugContext.baseTime.getTime();
+      return event.timestamp.getTime() - Firebug.currentContext.baseTime.getTime();
     },
     
     click: function(e) {
       var row = getAncestorByClass(e.target, 'paintRow');
       var event = row.repObject;
-      FirebugContext.baseTime = event.timestamp;
-      Firebug.Paint.updateEventList(FirebugContext.getPanel('Paint'));
+      Firebug.currentContext.baseTime = event.timestamp;
+      Firebug.Paint.updateEventList(Firebug.currentContext.getPanel('Paint'));
     },
     
     hover: function(e) {
       var row = getAncestorByClass(e.target, 'paintRow');
       var event = row.repObject;
       if (event.type != 'MozAfterPaint') return;
-      var sidePanel = FirebugContext.getPanel('PaintSide', false);
+      var sidePanel = Firebug.currentContext.getPanel('PaintSide', false);
     
       // For some reason, this width seems to be off by a bit.
       var screenshotWidth = sidePanel.panelNode.clientWidth - 16;
@@ -305,22 +306,22 @@ FBL.ns(function() {with (FBL) {
       // Draw paint event on document
       sidePanel.drawPaintEvent(
           event,
-          FirebugContext.window.document,
-          FirebugContext.window.document.getElementById(DOCUMENT_STAGE_ID +
-          FirebugContext.uid));
+          Firebug.currentContext.window.document,
+          Firebug.currentContext.window.document.getElementById(DOCUMENT_STAGE_ID +
+          Firebug.currentContext.uid));
 
       // Draw paint event in screenshot pane
       sidePanel.drawPaintEvent(
           event,
           sidePanel.panelNode.ownerDocument,
           sidePanel.panelNode.ownerDocument.getElementById(
-            SCREENSHOT_STAGE_ID + FirebugContext.uid), true, screenshotWidth);
+            SCREENSHOT_STAGE_ID + Firebug.currentContext.uid), true, screenshotWidth);
     
       if (event.image) {
         var img = sidePanel.panelNode.ownerDocument.getElementById(
-            IMAGE_ID + FirebugContext.uid);
+            IMAGE_ID + Firebug.currentContext.uid);
         img.style.width = px(screenshotWidth);
-        var scale = screenshotWidth / FirebugContext.window.innerWidth;
+        var scale = screenshotWidth / Firebug.currentContext.window.innerWidth;
         img.src = event.image;
       }
     }
@@ -345,7 +346,7 @@ FBL.ns(function() {with (FBL) {
       stage.innerHTML = '';
       var cx = 1;
       if (screenshot) {
-        cx = FirebugContext.window.document.body.clientWidth / screenshotWidth;
+        cx = Firebug.currentContext.window.document.body.clientWidth / screenshotWidth;
       }
 
       for (var j=0, clientRect; clientRect = event.clientRects[j++];) {
