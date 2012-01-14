@@ -2,12 +2,11 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
  xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
-    <em:id>{3D7E7B8E-0FD7-4083-B93F-AC520C1AB610}</em:id>
+    <em:id>3D7E7B8E-0FD7-4083-B93F-AC520C1AB610</em:id>
     <em:name>Firebug Paint Events</em:name>
     <em:version>0.1.8</em:version>
     <em:creator>Kyle Scholz</em:creator>
     <em:contributor>Davide Mendolia</em:contributor>
-    <em:type>2</em:type>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- firefox -->
