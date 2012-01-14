@@ -4,7 +4,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>firebugpaintevents@kylescholz.com</em:id>
     <em:name>Firebug Paint Events</em:name>
-    <em:version>0.1.7</em:version>
+    <em:version>0.1.8</em:version>
     <em:creator>Kyle Scholz</em:creator>
     <em:contributor>Davide Mendolia</em:contributor>
     <em:type>2</em:type>
